@@ -1,10 +1,12 @@
-import express from 'express';
+console.log("SERVER FILE EXECUTING");
 import dotenv from 'dotenv';
+import express from 'express';
 import cors from 'cors';
 import connectDB from './config/db.js';
 import authRoutes from './routes/auth.js';
 import adminRoutes from './routes/admin.js';
 import studentRoutes from './routes/student.js';
+import mongoose from 'mongoose';
 
 // Load environment variables
 dotenv.config();
@@ -53,6 +55,17 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGO_URI);
+        console.log("MongoDB Connected");
+    } catch (error) {
+        console.error("MongoDB connection failed:", error.message);
+        process.exit(1);
+    }
+};
+
+export default connectDB;
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
